@@ -33,6 +33,12 @@ class User(db.Model, UserMixin):
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
 
+    def can_enroll(self, class_obj):
+        return self.budget >= class_obj.units
+
+    def can_drop(self, class_obj):
+        return class_obj in self.courses
+
 class Course(db.Model):
     __tablename__='Courses'
     name = db.Column('name', db.String(length=30), primary_key=True)
@@ -41,6 +47,16 @@ class Course(db.Model):
     student = db.Column(db.Integer(), db.ForeignKey('Students.id'))
     def __repr__(self):
         return f'Course {self.name}'
+
+    def enroll(self, user):
+        self.student = user.id
+        user.budget -= self.units
+        db.session.commit()
+
+    def drop(self, user):
+        self.student = None
+        user.budget += self.units
+        db.session.commit()
 
 class Professor(db.Model):
     __tablename__='Professors'
