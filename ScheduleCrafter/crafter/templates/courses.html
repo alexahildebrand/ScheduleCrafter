@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+    Schedule Page
+{% endblock %}
+
+{% block content %}
+<div class="row" style="margin-top:20px; margin-left:20px">
+   <div class="col-8">
+       <h2>Available Courses</h2>
+       <p>Click on one of the courses to start enrolling</p>
+       <br>
+    <table class="table table-hover" style = background-color:#B6CCC2>
+        <thead>
+            <tr>
+                <!-- Your Columns HERE -->
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Units</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Your rows inside the table HERE: -->
+            {% for course in courses %}
+            {% include 'includes/courses_modals.html'%}
+                <tr>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.description }}</td>
+                    <td>{{ course.units }}</td>
+                    <td>
+                        <a class="btn btn-outline " style= "background-color: #789F90;" href=" {{course.name}} " >See Section</a>
+                        <button class="btn btn-outline " style= "background-color: #789F90;" data-toggle="modal" data-target="#Modal-Enroll-{{ course.name }}">Enroll?</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+     </table>
+    </div>
+    <div class="col-4">
+        <h2>Enrolled Classes</h2>
+        <p>Click on unenroll to drop course</p>
+        <br>
+        <div class = "row">
+           {% for enrolled_course in enrolled_courses %}
+            {% include 'includes/enrolled_courses_modals.html'%}
+           <div class = "col-md-6">
+              <div style="background-color: #B6CCC2; color: black; margin-bottom: 5px" class="card text-center">
+                  <div class="card-body">
+                     <h5 class="card-title">{{ enrolled_course.name }}</h5>
+                     <button type="button" class="btn btn-outline-danger" style="margin-bottom: 5px"
+                             data-toggle="modal" data-target="#Modal-DropConfirm-{{ enrolled_course.name }}">
+                        Unenroll
+                     </button>
+                     <p class="card-text"><strong>
+                          {{ enrolled_course.units }} units
+                     </strong></p>
+                  </div>
+              </div>
+           </div>
+           {% endfor %}
+        </div>
+</div>
+{% endblock %}
+</div>
